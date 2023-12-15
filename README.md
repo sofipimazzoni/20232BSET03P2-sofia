@@ -2,6 +2,23 @@
 
 Esse arquivo estará dividido entre as vulnerabilidades encontradas no código e as melhorias que eu fiz nelas.
 
+## Sanitizar e validar dados de entrada para evitar SQL Injection
+
+Para realizar essa validação, eu utilizei o ponto de interrogação (?) como marcador de posição, o que é uma prática recomendada para evitar ataques de SQL Injection, pois ao utilizá-lo, a responsabilidade da inserção passa a ser do banco de dados, e ele garante que qualquer dado fornecido seja tratado apenas como um valor literal e não como parte da estrutura da consulta SQL.
+
+Antes, a manipulação dos dados não possuía nenhuma proteção e estava assim:
+```js
+db.run(`INSERT INTO cats (name, votes) VALUES ('${name}', 0)`, function(err) {}
+  });
+```
+
+Porém, para garantir uma maior segurança, eu modifiquei para:
+```js
+db.run(`INSERT INTO cats (name, votes) VALUES (?, 0)`, name, function(err) {}
+```
+
+
+
 ## Id não computado
 
 O código para criar uma tabela nova no banco de dados estava assim:
